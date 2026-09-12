@@ -1,12 +1,11 @@
 ## Book Scraper Project (Capstone)
 
-## Purpose: 
 This project gets book titles and prices from a bookstore website (books.toscrape.com by default), saves the data in a CSV file, and shows a short summary.
 
-## Requirements:
+# Requirements:
  Python 3.11+ and the packages in requirements.txt.
 
-## Installation:
+# Installation:
 
 pip install -r requirements.txt
 
