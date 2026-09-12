@@ -1,22 +1,45 @@
-Python
-import pandas as pd
+from utils import validate_url
 from bs4 import BeautifulSoup
-from src.utils import fetch_page
+import requests
 
-def parse_articles(html_content):
-    soup = BeautifulSoup(html_content, 'html.parser')
-    return [{'Title': article.find('h2').get_text(strip=True)} 
-            for article in soup.find_all('article') if article.find('h2')]
 
-def save_to_csv(records, output_path):
-    dataframe = pd.DataFrame(records)
-    dataframe.to_csv(output_path, index=False)
-    return len(dataframe)
+def scrape_books(url="http://books.toscrape.com/"):
+    """Scrapes book titles and prices from books.toscrape.com safely."""
+    books_list = []
 
-def run_pipeline(url, output_path):
-    html_content = fetch_page(url)
-    if not html_content:
-        return
-    records = parse_articles(html_content)
-    row_count = save_to_csv(records, output_path)
-    print(f"Successfully processed {row_count} rows and saved to {output_path}")
+    if not validate_url(url):
+        print("Error: Invalid URL provided.")
+        return books_list
+
+    try:
+        response = requests.get(url, timeout=10)
+        response.encoding = response.apparent_encoding  # It solves the encoding problem
+
+        if response.status_code != 200:
+            print(f"Error: Received status code {response.status_code}")
+            return books_list
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        books = soup.find_all("article", class_="product_pod")
+
+        for book in books:
+            title = book.h3.a["title"]
+            price = book.find("p", class_="price_color").text
+            books_list.append({"Title": title, "Price": price})
+
+    except requests.exceptions.RequestException as e:
+        print(f"Network error occurred: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    return books_list
+
+
+def get_book_count(data):
+    """Returns the total number of books scraped."""
+    return len(data)
+
+
+def get_first_books(data, n=3):
+    """Returns the first n books from the scraped data."""
+    return data[:n]
