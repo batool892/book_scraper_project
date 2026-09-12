@@ -1,45 +1,40 @@
-from utils import validate_url
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 
 def scrape_books(url="http://books.toscrape.com/"):
-    """Scrapes book titles and prices from books.toscrape.com safely."""
-    books_list = []
-
-    if not validate_url(url):
-        print("Error: Invalid URL provided.")
-        return books_list
+    """Scrape book titles and prices from a books.toscrape.com style page."""
+    books_list = []  # will hold one dict per book we find on the page
 
     try:
-        response = requests.get(url, timeout=10)
-        response.encoding = response.apparent_encoding  # It solves the encoding problem
+        response = requests.get(url, timeout=10)  # ask the server for the page, wait max 10 seconds
+        response.encoding = response.apparent_encoding  # fixes weird characters (e.g. accented letters)
 
-        if response.status_code != 200:
-            print(f"Error: Received status code {response.status_code}")
+        if response.status_code != 200:  # 200 means "OK"; anything else means something went wrong
+            print(f"Error: server returned status code {response.status_code}")
             return books_list
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        books = soup.find_all("article", class_="product_pod")
+        soup = BeautifulSoup(response.text, "html.parser")  # parse the HTML so we can search through it
+        books = soup.find_all("article", class_="product_pod")  # each book on the page lives in one of these
 
-        for book in books:
-            title = book.h3.a["title"]
-            price = book.find("p", class_="price_color").text
-            books_list.append({"Title": title, "Price": price})
+        for book in books:  # loop over every book found on the page
+            title = book.h3.a["title"]  # the title is stored in the "title" attribute of the <a> tag
+            price = book.find("p", class_="price_color").text  # the price is the text inside this <p> tag
+            books_list.append({"Title": title, "Price": price})  # save this book's data to our list
 
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException as e:  # covers connection errors, timeouts, bad URLs, etc.
         print(f"Network error occurred: {e}")
-    except Exception as e:
+    except Exception as e:  # catch-all so one bad book/page doesn't crash the whole program
         print(f"An unexpected error occurred: {e}")
 
     return books_list
 
 
 def get_book_count(data):
-    """Returns the total number of books scraped."""
+    """Return how many books are in the scraped data."""
     return len(data)
 
 
 def get_first_books(data, n=3):
-    """Returns the first n books from the scraped data."""
+    """Return the first n books from the scraped data (default: 3)."""
     return data[:n]

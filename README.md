@@ -1,24 +1,22 @@
-# Book_Scraper_Project (Capstone Project)
+## Book Scraper Project (Capstone)
 
-This is a Python project that scrapes book data from the web, processes the information,
- and saves it into a CSV file using a functional programming approach
+## Purpose: 
+This project gets book titles and prices from a bookstore website (books.toscrape.com by default), saves the data in a CSV file, and shows a short summary.
 
-## Installation and Usage
+## Requirements:
+ Python 3.11+ and the packages in requirements.txt.
 
-1. Install required packages:
-   ```bash
-   pip install -r requirements.txt
+## Installation:
 
-2. Run the application:
-    ```bash
-    python src/main.py
+pip install -r requirements.txt
 
+# How to run:
 
-## Libraries Used
-BeautifulSoup4: Used to read the HTML and get the information I need from the webpage.
-Requests: Used to send HTTP requests and get the webpage data.
+1. python src/main.py
 
-## Project Structure
-src/main.py: The main file. It runs the scraping and saving process and gets the URL from the user.
-src/logic.py: Contains the main functions for extracting data from the webpage.
-src/utils.py: Contains helper functions for validation and working with CSV files.
+The program will ask for a URL. Press Enter if you want to use the default website.
+
+## Libraries used:
+
+requests — used to get the webpage data.
+beautifulsoup4 — used to read the HTML and get the data we need.
