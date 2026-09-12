@@ -1,10 +1,14 @@
-import csv
-import os
+import csv  # standard library module for reading/writing CSV files
+import os  # standard library module for filesystem paths and checks
 
 
 def validate_url(url):
     """Check that url is a text string starting with http:// or https://."""
-    return isinstance(url, str) and url.startswith(("http://", "https://"))
+    if not isinstance(url, str):
+        return False
+    if url.startswith("http://") or url.startswith("https://"):
+        return True
+    return False
 
 
 def save_to_csv(data, file_path="data/books_data.csv"):
@@ -32,6 +36,4 @@ def read_from_csv(file_path="data/books_data.csv"):
                 data.append(row)
     except FileNotFoundError:
         print(f"Error: file not found at {file_path}")
-    except IOError as e:
-        print(f"File reading error: {e}")
     return data

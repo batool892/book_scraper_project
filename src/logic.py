@@ -1,5 +1,5 @@
-import requests
-from bs4 import BeautifulSoup
+import requests  # third-party HTTP library
+from bs4 import BeautifulSoup  # third-party library for parsing HTML
 
 
 def scrape_books(url="http://books.toscrape.com/"):
@@ -8,7 +8,7 @@ def scrape_books(url="http://books.toscrape.com/"):
 
     try:
         response = requests.get(url, timeout=10)  # ask the server for the page, wait max 10 seconds
-        response.encoding = response.apparent_encoding  # fixes weird characters (e.g. accented letters)
+        response.encoding = "utf-8"  # make sure special characters like £ show up correctly
 
         if response.status_code != 200:  # 200 means "OK"; anything else means something went wrong
             print(f"Error: server returned status code {response.status_code}")
@@ -22,10 +22,8 @@ def scrape_books(url="http://books.toscrape.com/"):
             price = book.find("p", class_="price_color").text  # the price is the text inside this <p> tag
             books_list.append({"Title": title, "Price": price})  # save this book's data to our list
 
-    except requests.exceptions.RequestException as e:  # covers connection errors, timeouts, bad URLs, etc.
-        print(f"Network error occurred: {e}")
-    except Exception as e:  # catch-all so one bad book/page doesn't crash the whole program
-        print(f"An unexpected error occurred: {e}")
+    except Exception as e:  # covers network errors, missing page elements, etc.
+        print(f"An error occurred while scraping: {e}")
 
     return books_list
 
