@@ -7,17 +7,17 @@ def main():
     print("=== Starting Book Scraper Tool ===")
 
     target_url = input("Enter the URL to scrape (press Enter for default): ").strip()
-    if not target_url:  # if they just pressed Enter, fall back to a default practice site
+    if not target_url:  
         target_url = "http://books.toscrape.com/"
 
-    if not validate_url(target_url):  # make sure the URL at least looks valid before we use it
+    if not validate_url(target_url):  
         print("Invalid URL entered. Please enter a valid URL starting with http:// or https://")
         return
 
     print(f"Fetching data from: {target_url}")
     scraped_data = scrape_books(target_url)
 
-    if not scraped_data:  # scrape_books() returns [] if it found nothing or hit an error
+    if not scraped_data:  
         print("No data was collected due to an error.")
         print("=== Process Finished ===")
         return

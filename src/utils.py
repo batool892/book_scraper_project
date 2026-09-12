@@ -1,5 +1,5 @@
-import csv  # standard library module for reading/writing CSV files
-import os  # standard library module for filesystem paths and checks
+import csv  
+import os 
 
 
 def validate_url(url):
@@ -14,15 +14,15 @@ def validate_url(url):
 def save_to_csv(data, file_path="data/books_data.csv"):
     """Write the scraped data (a list of dicts) to a CSV file."""
     try:
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)  # make sure the data/ folder exists
-        with open(file_path, mode="w", newline="", encoding="utf-8") as csv_file:  # open/create the file for writing
-            fieldnames = ["Title", "Price"]  # the column headers
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)  # writer that understands dicts
-            writer.writeheader()  # write the header row first
-            for row in data:  # write one row per book
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)  
+        with open(file_path, mode="w", newline="", encoding="utf-8") as csv_file:  
+            fieldnames = ["Title", "Price"]  
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)  
+            writer.writeheader() 
+            for row in data:  
                 writer.writerow(row)
         print(f"Successfully saved data to {file_path}")
-    except IOError as e:  # covers permission errors, disk full, etc.
+    except IOError as e:  
         print(f"File writing error: {e}")
 
 
@@ -30,9 +30,9 @@ def read_from_csv(file_path="data/books_data.csv"):
     """Read book data back from a CSV file and return it as a list of dicts."""
     data = []
     try:
-        with open(file_path, mode="r", newline="", encoding="utf-8") as csv_file:  # open the file for reading
-            reader = csv.DictReader(csv_file)  # reader that turns each row into a dict
-            for row in reader:  # loop over every row in the file
+        with open(file_path, mode="r", newline="", encoding="utf-8") as csv_file:  
+            reader = csv.DictReader(csv_file)  
+            for row in reader:  
                 data.append(row)
     except FileNotFoundError:
         print(f"Error: file not found at {file_path}")
